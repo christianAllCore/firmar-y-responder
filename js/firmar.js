@@ -376,6 +376,11 @@ function rectanguloPdf(d) {
 }
 
 // ------------------------------------------------------------------ archivo .p12
+function guardarP12() {
+  const p = estado.p12;
+  if (!p) return Promise.resolve();
+  return C.almacen.guardar('p12', { nombre: p.nombre, bytes: p.bytes.buffer.slice(p.bytes.byteOffset, p.bytes.byteOffset + p.bytes.byteLength), guardado: Date.now() });
+}
 function ponerP12(nombre, bytes, guardar) {
   estado.p12 = { nombre: nombre, bytes: bytes };
   $('sinP12').hidden = true;
@@ -383,9 +388,8 @@ function ponerP12(nombre, bytes, guardar) {
   $('nombreP12').textContent = nombre;
   $('nombreP12').title = nombre;
   $('paso2').classList.add('hecha');
-  if (guardar) {
-    C.almacen.guardar('p12', { nombre: nombre, bytes: bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength), guardado: Date.now() });
-  }
+  // solo se guarda si la persona quiere que se recuerde (en una computadora compartida, no)
+  if (guardar && $('recordarP12').checked) guardarP12();
 }
 function quitarP12() {
   estado.p12 = null;
@@ -399,6 +403,18 @@ function quitarP12() {
   pintarFirmante();
   refrescarSellos();
   avisar('info', 'Se quitó tu archivo de firma de este navegador.');
+}
+function alCambiarRecordar() {
+  const recordar = $('recordarP12').checked;
+  if (recordar) {
+    guardarP12();
+    avisar('info', 'Tu archivo .p12 queda guardado en este navegador para la próxima vez.');
+  } else {
+    // se borra lo guardado; el archivo sigue en memoria solo mientras esta ventana esté abierta
+    C.almacen.borrar('p12');
+    avisar('info', 'Tu archivo .p12 ya no queda guardado en este navegador: la próxima vez se pedirá de nuevo.');
+  }
+  guardarPreferencias(null);
 }
 async function alElegirP12(ev) {
   const f = ev.target.files && ev.target.files[0];
@@ -432,7 +448,7 @@ function refrescarSellos() {
 
 // ------------------------------------------------------------------ preferencias
 function guardarPreferencias(docFirmado) {
-  const pref = { firmante: estado.firmante, mensaje: $('mensaje').value };
+  const pref = { firmante: estado.firmante, mensaje: $('mensaje').value, recordarP12: $('recordarP12').checked };
   const actual = estado.docs[estado.actual];
   const ref = (actual && actual.sello && actual.paginas) ? actual : docFirmado;
   if (ref && ref.sello && ref.paginas) {
@@ -543,7 +559,11 @@ function esperarOffice() {
 function conectarConPanel() {
   const recibir = C.receptor(alRecibirDelPanel);
   estado.enviarAlPanel = (obj) => C.enviarEnTrozos((t) => Office.context.ui.messageParent(t), obj);
-  Office.context.ui.addHandlerAsync(Office.EventType.DialogParentMessageReceived, (arg) => recibir(arg.message), (r) => {
+  Office.context.ui.addHandlerAsync(Office.EventType.DialogParentMessageReceived, (arg) => {
+    // solo se aceptan mensajes del panel de este mismo sitio
+    if (arg && arg.origin && arg.origin !== location.origin) return;
+    recibir(arg.message);
+  }, (r) => {
     if (r.status !== Office.AsyncResultStatus.Succeeded) {
       vacio('No se pudo conectar con Outlook.');
       avisar('error', 'No se pudo conectar con Outlook. Cierra esta ventana y pulsa otra vez «Firmar y responder».', r.error && r.error.message);
@@ -597,6 +617,9 @@ function conectarControles() {
   $('btnCambiarP12').addEventListener('click', () => $('archivoP12').click());
   $('btnQuitarP12').addEventListener('click', quitarP12);
   $('archivoP12').addEventListener('change', alElegirP12);
+  $('recordarP12').addEventListener('change', alCambiarRecordar);
+  // la clave no se queda en la pantalla cuando la ventana se cierra
+  window.addEventListener('pagehide', () => { $('clave').value = ''; });
   $('btnElegirPdf').addEventListener('click', () => $('archivoPdf').click());
   $('archivoPdf').addEventListener('change', (ev) => { cargarPdfsSueltos(ev.target.files); ev.target.value = ''; });
   $('btnVerClave').addEventListener('click', () => {
@@ -641,6 +664,7 @@ async function iniciar() {
   const pref = (await C.almacen.leer('preferencias')) || {};
   estado.posicion = pref.posicion || null;
   estado.firmante = pref.firmante || '';
+  $('recordarP12').checked = pref.recordarP12 !== false;
   $('mensaje').value = (typeof pref.mensaje === 'string' && pref.mensaje.trim()) ? pref.mensaje : saludo();
   const p12 = await C.almacen.leer('p12');
   if (p12 && p12.bytes) ponerP12(p12.nombre, new Uint8Array(p12.bytes), false);

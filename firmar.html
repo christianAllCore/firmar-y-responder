@@ -2,6 +2,12 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
+<!-- Política de seguridad: el navegador NO deja que esta página mande datos a otro servidor que no sea este sitio
+     (connect-src), ni que ejecute código que no venga de este sitio o de Microsoft (script-src), ni formularios.
+     Así, ni una librería ni un PDF malicioso podrían mandar tu clave o tu .p12 a ninguna parte por la red.
+     'unsafe-eval' está SOLO porque office.js de Microsoft (microsoftajax.js) lo necesita para arrancar: sin eso,
+     Outlook no puede usar el complemento (probado el 18/11/2026 con el office.js real; pdf.js va con isEvalSupported=false). -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' https://appsforoffice.microsoft.com; connect-src 'self' https://appsforoffice.microsoft.com; style-src 'self' 'unsafe-inline' https://appsforoffice.microsoft.com; img-src 'self' data: blob: https://appsforoffice.microsoft.com; font-src 'self' data:; frame-src https://appsforoffice.microsoft.com; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Firmar y responder</title>
 <link rel="icon" href="img/icono-32.png">
@@ -70,6 +76,10 @@
         </div>
         <div class="firmante tenue" id="firmante"></div>
       </div>
+      <label class="recordar" for="recordarP12">
+        <input type="checkbox" id="recordarP12" checked>
+        <span>Recordar mi archivo .p12 en este navegador (la clave nunca se guarda). Desmárcalo en una computadora compartida.</span>
+      </label>
       <input type="file" id="archivoP12" accept=".p12,.pfx,application/x-pkcs12" hidden>
     </section>
 

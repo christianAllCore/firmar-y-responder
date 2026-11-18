@@ -30,7 +30,7 @@
 
     // Medidas y textos del sello tal como lo deja FirmaEC 5.1.0 (revisado en PDF reales firmados con el):
     // 110 x 36 puntos, QR de 36 x 36 a la izquierda (sin margen), texto desde x = 36.67, letras de 3.25 y 6.25.
-    const VERSION = '1.0';
+    const VERSION = '1.1';
     const SELLO = { ancho: 110, alto: 36, letraChica: 3.25, letraNombre: 6.25 };
     const VALIDAR_CON = 'VALIDAR CON: https://www.firmadigital.gob.ec';
     const HECHO_CON = 'Firmado digitalmente con Firmar y responder ' + VERSION;

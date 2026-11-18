@@ -123,6 +123,10 @@ body.dialogo { height: 100vh; overflow: hidden; }
 .archivo-p12 .acciones { display: flex; gap: 10px; flex: none; font-size: 12px; }
 .clave { position: relative; }
 .clave input { padding-right: 64px; }
+/* Edge pone su propio ojo en los cuadros de clave; ya está el botón «Ver» (salían dos) */
+.clave input::-ms-reveal, .clave input::-ms-clear { display: none; }
+.recordar { display: flex; align-items: flex-start; gap: 8px; margin: 8px 0 0; font-size: 12px; color: var(--tenue); cursor: pointer; }
+.recordar input { margin: 2px 0 0; accent-color: var(--azul); }
 .clave .btn-ver { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-size: 12px; }
 .firmante { margin-top: 6px; }
 .botones { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }

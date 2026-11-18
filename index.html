@@ -2,6 +2,10 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
+<!-- Política de seguridad: el navegador NO deja que esta página mande datos a otro servidor que no sea este sitio
+     (connect-src), ni que ejecute código que no venga de este sitio o de Microsoft (script-src), ni formularios.
+     'unsafe-eval' está SOLO porque office.js de Microsoft (microsoftajax.js) lo necesita para arrancar. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' https://appsforoffice.microsoft.com; connect-src 'self' https://appsforoffice.microsoft.com; style-src 'self' 'unsafe-inline' https://appsforoffice.microsoft.com; img-src 'self' data: blob: https://appsforoffice.microsoft.com; font-src 'self' data:; frame-src https://appsforoffice.microsoft.com; object-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Firmar y responder</title>
 <link rel="icon" href="img/icono-32.png">
@@ -23,6 +27,10 @@
   <section id="lista" class="lista" aria-label="PDF del correo"></section>
 
   <div class="acciones">
+    <button type="button" id="btnReabrir" class="btn secundario" hidden>¿No ves la respuesta? Ábrela otra vez</button>
+    <p id="ayudaRespuesta" class="nota" hidden>Outlook abre la respuesta en una <b>ventana nueva</b>. Si no aparece:
+      mira la ventana principal de Outlook o la carpeta <b>Borradores</b>; y si en la barra de direcciones del
+      navegador sale el aviso de <b>ventana emergente bloqueada</b>, elige «Permitir siempre» para Outlook.</p>
     <button type="button" id="btnAbrir" class="btn primario" hidden>Abrir para firmar</button>
   </div>
   <section id="descargas" class="descargas" hidden></section>

@@ -82,6 +82,8 @@
     }
     resultado = null;
     $('btnAbrir').hidden = true;
+    $('btnReabrir').hidden = true;
+    $('ayudaRespuesta').hidden = true;
     $('descargas').hidden = true;
     estado('Abriendo la ventana de firma…', 'info');
     const url = new URL('firmar.html', location.href);
@@ -94,7 +96,11 @@
         return;
       }
       dialogo = r.value;
-      dialogo.addEventHandler(Office.EventType.DialogMessageReceived, (arg) => recibir(arg.message));
+      dialogo.addEventHandler(Office.EventType.DialogMessageReceived, (arg) => {
+        // solo se aceptan mensajes de la ventana de firma de este mismo sitio
+        if (arg && arg.origin && arg.origin !== location.origin) return;
+        recibir(arg.message);
+      });
       dialogo.addEventHandler(Office.EventType.DialogEventReceived, (arg) => {
         dialogo = null;
         $('btnAbrir').hidden = false;
@@ -172,21 +178,44 @@
       return;
     }
     estado('Abriendo la respuesta…', 'info');
+    abrirRespuesta(m, (ok, error) => {
+      if (!ok) {
+        ofrecerDescargas(m.archivos);
+        estado('Outlook no pudo abrir la respuesta con el PDF firmado (' + (error || 'sin detalle') +
+          '). Pulsa «Abrir la respuesta otra vez» o descarga el PDF firmado abajo y adjúntalo a mano.', 'error');
+      } else {
+        estado('✔ Listo. Se abrió la respuesta' + (m.todos ? ' a todos' : '') + ' con ' +
+          (nombres.length === 1 ? '«' + nombres[0] + '» adjunto' : nombres.length + ' PDF firmados adjuntos') +
+          '. Revísala y pulsa Enviar.' + extra, 'ok');
+      }
+      // Outlook en la web abre la respuesta en una ventana nueva. Si la firma tardó unos segundos, el navegador
+      // puede bloquearla como «ventana emergente» y aun así Outlook responde «listo» (pasó el 18/11/2026 en Chrome):
+      // se deja a la vista un botón para abrirla de nuevo con un clic (con un clic, el navegador ya no la bloquea).
+      $('btnReabrir').hidden = false;
+      $('ayudaRespuesta').hidden = false;
+    });
+  }
+  function abrirRespuesta(m, alTerminar) {
     const datos = {
       htmlBody: htmlMensaje(m.mensaje),
       attachments: m.archivos.map((a) => ({ type: 'base64', name: a.nombre, base64file: a.base64 }))
     };
     const metodo = m.todos ? 'displayReplyAllFormAsync' : 'displayReplyFormAsync';
-    item[metodo](datos, (r) => {
-      if (r.status !== Office.AsyncResultStatus.Succeeded) {
-        ofrecerDescargas(m.archivos);
-        estado('Outlook no pudo abrir la respuesta con el PDF firmado (' + ((r.error && r.error.message) || 'sin detalle') +
-          '). Descarga el PDF firmado abajo y adjúntalo a mano.', 'error');
-        return;
-      }
-      estado('✔ Listo. Se abrió la respuesta' + (m.todos ? ' a todos' : '') + ' con ' +
-        (nombres.length === 1 ? '«' + nombres[0] + '» adjunto' : nombres.length + ' PDF firmados adjuntos') +
-        '. Revísala y pulsa Enviar.' + extra, 'ok');
+    try {
+      item[metodo](datos, (r) => {
+        if (r.status !== Office.AsyncResultStatus.Succeeded) alTerminar(false, r.error && r.error.message);
+        else alTerminar(true);
+      });
+    } catch (e) {
+      alTerminar(false, e && e.message);
+    }
+  }
+  function reabrirRespuesta() {
+    if (!resultado) return;
+    // se llama directamente desde el clic: así el navegador deja abrir la ventana de la respuesta
+    abrirRespuesta(resultado, (ok, error) => {
+      if (!ok) estado('Outlook no pudo abrir la respuesta (' + (error || 'sin detalle') + '). Descarga el PDF firmado abajo y adjúntalo a mano.', 'error');
+      else estado('✔ Se abrió otra vez la respuesta con el PDF firmado. Revísala y pulsa Enviar.', 'ok');
     });
   }
 
@@ -205,6 +234,7 @@
     pdfs = (item.attachments || []).filter(esPdf);
     pintarLista();
     $('btnAbrir').addEventListener('click', abrirDialogo);
+    $('btnReabrir').addEventListener('click', reabrirRespuesta);
     if (!pdfs.length) { estado('Este correo no tiene archivos PDF adjuntos.', 'info'); return; }
     abrirDialogo();
   });

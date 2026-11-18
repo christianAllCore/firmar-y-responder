@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ayuda - Firmar y responder</title>
 <link rel="icon" href="img/icono-32.png">
@@ -73,6 +74,28 @@
   </details>
 
   <details>
+    <summary>Seguridad: ¿qué pasa con mi clave y mi archivo .p12?</summary>
+    <ul>
+      <li><b>Tu clave</b> se escribe en la ventana de firma, se usa en ese momento para abrir tu .p12 y firmar, y se
+        borra. No se guarda en ningún lado y no se envía a ninguna parte.</li>
+      <li><b>Tu archivo .p12</b>: si dejas marcada la casilla <b>Recordar</b>, queda guardado dentro de tu navegador,
+        en tu computadora, como si estuviera en tu escritorio, y sigue protegido por su clave. En una computadora
+        compartida, desmarca <b>Recordar</b> o pulsa <b>Quitar</b> al terminar.</li>
+      <li><b>Lo que sale de tu computadora</b> es solo el PDF firmado, y solo cuando tú pulsas <b>Enviar</b>. El
+        complemento no envía correos por su cuenta.</li>
+      <li><b>Lo que ve en Outlook</b>: solo el correo que tienes abierto (su asunto y sus adjuntos). No puede leer
+        otros correos ni tus contactos.</li>
+      <li>Cada página trae una <b>política de seguridad</b> que hace que el propio navegador prohíba enviar datos a
+        cualquier servidor que no sea este sitio y cargar código de otros lados (salvo office.js de Microsoft,
+        obligatorio en Outlook).</li>
+      <li>Lo único en lo que hay que confiar es en <b>quien controla el sitio publicado</b>. Quien lo publica
+        tiene un <code>COMPROBAR_SITIO.bat</code> que verifica, archivo por archivo, que lo publicado no haya
+        cambiado.</li>
+      <li>Nadie te pedirá nunca tu clave por correo ni por teléfono. Tu .p12 y tu clave no se comparten.</li>
+    </ul>
+  </details>
+
+  <details>
     <summary>Varios PDF en el mismo correo</summary>
     <p>Arriba de la ventana aparece una pestaña por cada PDF. Pon el sello en los que quieras firmar (se marcan
       con ✔). Al pulsar Firmar y responder se adjuntan todos los firmados. Los que no tienen sello no se firman
@@ -89,6 +112,15 @@
   <details>
     <summary>Si algo sale mal</summary>
     <ul>
+      <li><b>Firmé pero no veo la respuesta (no aparece Enviar)</b>: Outlook abre la respuesta en una
+        <b>ventana nueva</b>. Mira la ventana principal de Outlook o la carpeta <b>Borradores</b>. Si en la barra de
+        direcciones del navegador aparece el aviso de <b>ventana emergente bloqueada</b>, ábrelo y elige
+        «Permitir siempre» para Outlook. Después pulsa <b>¿No ves la respuesta? Ábrela otra vez</b> en el panel:
+        se abre con el mismo PDF firmado, sin volver a firmar.
+        <figure>
+          <img src="img/guia/panel_listo.png" alt="El panel después de firmar, con el botón ¿No ves la respuesta? Ábrela otra vez" style="max-width:360px">
+          <figcaption>El panel después de firmar: si la respuesta no apareció, el botón la abre otra vez.</figcaption>
+        </figure></li>
       <li><b>«La clave no es correcta»</b>: escríbela de nuevo; ojo con las mayúsculas. Con el botón <b>Ver</b>
         puedes mirar lo que escribiste.</li>
       <li><b>«Tu firma electrónica venció»</b>: hay que renovarla con la entidad que la emitió.</li>
@@ -117,7 +149,7 @@
     </ol>
   </details>
 
-  <p class="tenue" style="margin-top:28px">Firmar y responder v1.0 · usa pdf.js, pdf-lib, forge y qrcode-generator
+  <p class="tenue" style="margin-top:28px">Firmar y responder v1.1 · usa pdf.js, pdf-lib, forge y qrcode-generator
     (licencias en <a href="lib/LICENCIAS.txt" target="_blank" rel="noopener">lib/LICENCIAS.txt</a>).</p>
 </main>
 </body>
