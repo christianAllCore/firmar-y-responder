@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ayuda - Firmar y responder</title>
+<link rel="icon" href="img/icono-32.png">
+<link rel="stylesheet" href="css/estilo.css">
+<style>
+  .hoja figure { margin: 14px 0; }
+  .hoja figure img { max-width: 100%; border: 1px solid var(--borde); border-radius: 8px; display: block; }
+  .hoja figcaption { font-size: 12px; color: var(--tenue); margin-top: 4px; }
+  .pasos { counter-reset: paso; list-style: none; padding: 0; }
+  .pasos > li { counter-increment: paso; position: relative; padding-left: 40px; margin: 12px 0; }
+  .pasos > li::before {
+    content: counter(paso); position: absolute; left: 0; top: 0; width: 28px; height: 28px; border-radius: 50%;
+    background: var(--azul); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 14px;
+  }
+</style>
+</head>
+<body class="ayuda">
+<main class="hoja">
+  <h1><img src="img/icono-32.png" alt=""> Firmar y responder</h1>
+  <p class="tenue">Firma electrónica de los PDF que te llegan por correo, sin salir de Outlook.</p>
+
+  <h2>Cómo se usa</h2>
+  <ol class="pasos">
+    <li>Abre el correo que trae el PDF y pulsa <b>Firmar y responder</b>. Está en <b>Aplicaciones</b>
+      (el ícono de cuadritos), junto a Responder y Reenviar.</li>
+    <li>Se abre el PDF en grande. <b>Haz clic donde va tu firma</b> (la próxima vez ya aparece donde la pusiste),
+      escribe la <b>clave de tu firma</b> y pulsa <b>Firmar y responder</b> o <b>Firmar y responder a todos</b>.</li>
+    <li>Se abre la respuesta a ese mismo correo con el <b>PDF firmado ya adjunto</b>. Revísala y pulsa <b>Enviar</b>.</li>
+  </ol>
+  <figure>
+    <img src="img/guia/ventana_firma.png" alt="Ventana de firma: el PDF a la izquierda con el sello puesto y, a la derecha, la clave y los botones para responder">
+    <figcaption>La ventana de firma: el sello ya está en su lugar; solo falta la clave y pulsar Firmar y responder.</figcaption>
+  </figure>
+
+  <div class="aviso info">
+    La clave <b>no se guarda</b>: se escribe cada vez, como en FirmaEC. Tu archivo de firma (.p12) se guarda
+    <b>solo en este navegador</b>, para no tener que buscarlo cada vez, y <b>nunca sale de tu equipo</b>:
+    la firma se hace aquí mismo, sin mandar nada a ningún servidor.
+  </div>
+
+  <details>
+    <summary>La primera vez</summary>
+    <p>El programa te pide tu archivo de firma: pulsa <b>Elegir mi archivo .p12…</b> y busca el archivo que te
+      entregó la entidad de certificación (por ejemplo Security Data). Solo se pide una vez por navegador.</p>
+    <figure>
+      <img src="img/guia/primera_vez.png" alt="Primera vez: el botón Elegir mi archivo .p12">
+      <figcaption>La primera vez se elige el archivo .p12; desde la segunda ya aparece solo.</figcaption>
+    </figure>
+    <p>Para quitarlo de este navegador (por ejemplo, si usas una computadora prestada) pulsa <b>Quitar</b> junto
+      al nombre del archivo. Para usar otro archivo, pulsa <b>Cambiar</b>.</p>
+  </details>
+
+  <details>
+    <summary>¿La firma es válida? ¿Cómo queda el sello?</summary>
+    <p>Sí. Es una firma electrónica con tu certificado, del mismo tipo que la de FirmaEC (PDF firmado con
+      SHA-512, “adbe.pkcs7.detached”). Lo que la hace válida es tu certificado, no el programa con que se firma.
+      Se comprueba igual que siempre: abriendo el PDF firmado en FirmaEC, en la opción para
+      <b>verificar un documento</b> (en la app del celular se llama «Verificar documento PDF»). No uses
+      Adobe Reader para esto: con certificados de Ecuador suele decir «validez desconocida» aunque la
+      firma esté bien.</p>
+    <p>El sello se ve como el de FirmaEC: el código QR a la izquierda y tu nombre a la derecha. El QR dice quién
+      firmó, la fecha y dónde validar.</p>
+    <figure>
+      <img src="img/guia/sello.png" alt="Dos sellos de firma en una misma acta, cada uno con su código QR y el nombre de quien firmó">
+      <figcaption>Ejemplo con nombres inventados: a la izquierda, una firma anterior; a la derecha, la nueva.</figcaption>
+    </figure>
+    <p>Si el PDF ya trae firmas de otras personas, <b>se conservan</b>: la tuya se agrega al final sin tocar
+      las anteriores, y todas siguen siendo válidas.</p>
+  </details>
+
+  <details>
+    <summary>Varios PDF en el mismo correo</summary>
+    <p>Arriba de la ventana aparece una pestaña por cada PDF. Pon el sello en los que quieras firmar (se marcan
+      con ✔). Al pulsar Firmar y responder se adjuntan todos los firmados. Los que no tienen sello no se firman
+      ni se adjuntan.</p>
+  </details>
+
+  <details>
+    <summary>Firmar un PDF que no viene en un correo</summary>
+    <p>Abre <a href="firmar.html" target="_blank" rel="noopener">esta página</a> directamente en el navegador:
+      eliges (o arrastras) el PDF, pones el sello, escribes tu clave y pulsas <b>Firmar y descargar</b>.
+      Se descarga una copia con <i>-signed</i> al final del nombre; el original no cambia.</p>
+  </details>
+
+  <details>
+    <summary>Si algo sale mal</summary>
+    <ul>
+      <li><b>«La clave no es correcta»</b>: escríbela de nuevo; ojo con las mayúsculas. Con el botón <b>Ver</b>
+        puedes mirar lo que escribiste.</li>
+      <li><b>«Tu firma electrónica venció»</b>: hay que renovarla con la entidad que la emitió.</li>
+      <li><b>«Este PDF está protegido»</b> o <b>«tiene clave para abrirlo»</b>: pide a quien lo envió una versión
+        sin protección.</li>
+      <li><b>No aparece el botón</b>: en el correo abierto, pulsa <b>Aplicaciones</b> (en la barra del
+        mensaje, junto a Responder y Reenviar) y busca Firmar y responder. Para tenerlo siempre a la vista:
+        <b>Más aplicaciones</b> → clic derecho sobre Firmar y responder → <b>Anclar</b>.</li>
+      <li><b>«Tu Outlook no deja adjuntar el PDF firmado automáticamente»</b>: pasa con versiones antiguas del
+        Outlook de escritorio. El panel deja descargar el PDF firmado para adjuntarlo a mano; o usa Outlook en el
+        navegador.</li>
+      <li>Cada aviso tiene un <b>Detalle técnico</b> que se puede abrir; sirve para pedir ayuda.</li>
+    </ul>
+  </details>
+
+  <details>
+    <summary>Instalación (se hace una sola vez)</summary>
+    <ol>
+      <li>Quien lo instala publica la carpeta <code>sitio</code> en una dirección pública <code>https</code>
+        (por ejemplo, GitHub Pages) y corre <code>GENERAR_MANIFIESTO.bat</code>, que crea <code>manifest.xml</code>.</li>
+      <li>En Outlook en el navegador abre <a href="https://aka.ms/olksideload" target="_blank" rel="noopener">aka.ms/olksideload</a>
+        → ventana <b>Complementos para Outlook</b> → <b>Mis complementos</b> → sección <b>Complementos personalizados</b>
+        → <b>Agregar un complemento personalizado</b> → <b>Agregar desde archivo</b> → elige <code>manifest.xml</code>
+        → <b>Instalar</b>.</li>
+      <li>Si no aparece «Agregar un complemento personalizado», el administrador de Microsoft 365 debe instalarlo.</li>
+    </ol>
+  </details>
+
+  <p class="tenue" style="margin-top:28px">Firmar y responder v1.0 · usa pdf.js, pdf-lib, forge y qrcode-generator
+    (licencias en <a href="lib/LICENCIAS.txt" target="_blank" rel="noopener">lib/LICENCIAS.txt</a>).</p>
+</main>
+</body>
+</html>

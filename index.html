@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Firmar y responder</title>
+<link rel="icon" href="img/icono-32.png">
+<link rel="stylesheet" href="css/estilo.css">
+<script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+<script src="js/comun.js"></script>
+<script src="js/panel.js"></script>
+</head>
+<body class="panel-tarea">
+  <header class="cab">
+    <img src="img/icono-32.png" alt="">
+    <div>
+      <h1>Firmar y responder</h1>
+      <p class="tenue">Firma electrónica de los PDF de este correo</p>
+    </div>
+  </header>
+
+  <div id="estado" class="aviso info" role="status" aria-live="polite">Preparando…</div>
+  <section id="lista" class="lista" aria-label="PDF del correo"></section>
+
+  <div class="acciones">
+    <button type="button" id="btnAbrir" class="btn primario" hidden>Abrir para firmar</button>
+  </div>
+  <section id="descargas" class="descargas" hidden></section>
+
+  <footer><a href="ayuda.html" target="_blank" rel="noopener">Ayuda</a></footer>
+</body>
+</html>

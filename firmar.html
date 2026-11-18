@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Firmar y responder</title>
+<link rel="icon" href="img/icono-32.png">
+<link rel="stylesheet" href="css/estilo.css">
+<script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+<script src="lib/pdf-lib.min.js"></script>
+<script src="lib/forge.min.js"></script>
+<script src="lib/qrcode.js"></script>
+<script src="js/firmador.js"></script>
+<script src="js/comun.js"></script>
+<script type="module" src="js/firmar.js"></script>
+</head>
+<body class="dialogo">
+<div class="app">
+  <main class="visor" aria-label="Documento">
+    <div class="visor-barra">
+      <div class="docs" id="docs" role="tablist" aria-label="Documentos del correo"></div>
+      <div class="visor-acciones">
+        <span id="infoPaginas" class="tenue"></span>
+        <button type="button" class="btn-texto" id="btnUltima" hidden>Ir a la última página</button>
+      </div>
+    </div>
+    <div class="paginas" id="paginas">
+      <div class="vacio" id="vacio">
+        <span class="girando oscuro"></span>
+        <span id="vacioTexto">Preparando…</span>
+      </div>
+    </div>
+  </main>
+
+  <aside class="panel" aria-label="Pasos para firmar">
+    <header class="panel-cab">
+      <div class="marca"><img src="img/icono-32.png" alt=""> Firmar y responder</div>
+      <div class="asunto" id="asunto"></div>
+    </header>
+
+    <div class="panel-cuerpo">
+    <section class="tarjeta" id="paso1">
+      <h2><span class="num">1</span> Dónde va tu firma</h2>
+      <p id="ayudaSello">Haz clic en el documento, en el lugar donde quieres el sello.</p>
+      <div class="estado-sello" id="estadoSello"></div>
+      <div class="solo-suelto" style="margin-top:10px">
+        <button type="button" class="btn ancho" id="btnElegirPdf">Elegir otro PDF…</button>
+      </div>
+      <input type="file" id="archivoPdf" accept="application/pdf,.pdf" multiple hidden>
+    </section>
+
+    <section class="tarjeta" id="paso2">
+      <h2><span class="num">2</span> Tu firma electrónica</h2>
+      <div id="sinP12">
+        <p>Elige tu archivo de firma (<b>.p12</b>). Queda guardado en este navegador para la próxima vez y no sale de tu equipo.</p>
+        <button type="button" class="btn ancho" id="btnElegirP12">Elegir mi archivo .p12…</button>
+      </div>
+      <div id="conP12" hidden>
+        <div class="archivo-p12">
+          <span class="nombre" id="nombreP12"></span>
+          <span class="acciones">
+            <button type="button" class="btn-texto" id="btnCambiarP12">Cambiar</button>
+            <button type="button" class="btn-texto rojo" id="btnQuitarP12">Quitar</button>
+          </span>
+        </div>
+        <label for="clave">Clave de la firma</label>
+        <div class="clave">
+          <input type="password" id="clave" autocomplete="off" spellcheck="false">
+          <button type="button" class="btn-texto btn-ver" id="btnVerClave">Ver</button>
+        </div>
+        <div class="firmante tenue" id="firmante"></div>
+      </div>
+      <input type="file" id="archivoP12" accept=".p12,.pfx,application/x-pkcs12" hidden>
+    </section>
+
+    <section class="tarjeta solo-outlook" id="paso3">
+      <h2><span class="num">3</span> Responder</h2>
+      <label for="mensaje">Mensaje de la respuesta</label>
+      <textarea id="mensaje" rows="2"></textarea>
+    </section>
+    </div>
+
+    <!-- siempre a la vista, aunque la pantalla sea baja -->
+    <div class="panel-acciones">
+      <div class="aviso" id="aviso" role="status" aria-live="polite" hidden></div>
+      <div class="botones solo-outlook">
+        <button type="button" class="btn primario" id="btnResponder">Firmar y responder</button>
+        <button type="button" class="btn secundario" id="btnResponderTodos">Firmar y responder a todos</button>
+      </div>
+      <p class="nota solo-outlook">Se abre la respuesta a este mismo correo con el PDF firmado ya adjunto. Revísala y pulsa <b>Enviar</b>.</p>
+      <div class="botones solo-suelto">
+        <button type="button" class="btn primario" id="btnDescargar">Firmar y descargar</button>
+      </div>
+      <p class="nota solo-suelto">Se descarga una copia firmada (<i>nombre</i>-signed.pdf). El original no cambia.</p>
+      <footer class="panel-pie">
+        <a href="ayuda.html" target="_blank" rel="noopener">Ayuda</a>
+        <button type="button" class="btn-texto solo-outlook" id="btnCerrar">Cerrar sin firmar</button>
+        <span id="version" style="margin-left:auto"></span>
+      </footer>
+    </div>
+  </aside>
+</div>
+</body>
+</html>
